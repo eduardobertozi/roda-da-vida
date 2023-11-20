@@ -86,14 +86,6 @@ export default function App() {
   }
 
   const downloadImage = () => {
-    // const content = document.getElementById("#content") as HTMLDivElement
-    
-    // html2canvas(content).then(function (canvas) {
-    //   const link = document.createElement('a');
-    //   link.download = 'roda_da_vida.png';
-    //   link.href = canvas.toDataUrl('image/png');
-    //   link.click();
-    // })
     const capture = document.querySelector("#capture") as HTMLDivElement
     html2canvas(capture).then(canvas => {
       const link = document.createElement('a')
@@ -104,7 +96,7 @@ export default function App() {
   }
 
   return (
-    <main className='flex flex-col min-h-screen p-6 xl:p-24 bg-slate-800 space-y-10 text-white'>
+    <main className='flex flex-col min-h-screen p-6 xl:p-24 bg-slate-800 space-y-10'>
       <a href="https://www.instagram.com/valeriagramss/" className='flex items-center justify-center gap-2 p-2 w-full text-zinc-300'>
         <img src="https://raw.githubusercontent.com/gauravghongde/social-icons/9d939e1c5b7ea4a24ac39c3e4631970c0aa1b920/SVG/White/Instagram_white.svg" className='w-8 h-8' alt="" />
         <p>@valeriagramss</p>
