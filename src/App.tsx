@@ -6,7 +6,7 @@ import {
 } from 'chart.js'
 import { PolarArea } from 'react-chartjs-2'
 import html2canvas from 'html2canvas'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export const INSTA_ICON="https://raw.githubusercontent.com/gauravghongde/social-icons/9d939e1c5b7ea4a24ac39c3e4631970c0aa1b920/SVG/White/Instagram_white.svg"
 
@@ -17,12 +17,6 @@ ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
  * @param labels label[]
 */
 const Results = ({ data, labels }: any) => {
-  const [items, setItems] = useState(labels)
-
-  useEffect(() => {
-    setItems(labels)
-  }, [labels])
-
   return (
     <>
       {data.datasets[0].backgroundColor.map((color: string, i: number) => (
@@ -33,7 +27,7 @@ const Results = ({ data, labels }: any) => {
           >
             {data.datasets[0].data[i]}
           </div>
-          <span className='text-sm'>{items[i]}</span>
+          <span className='text-sm'>{labels[i]}</span>
         </div>
       ))}
     </>
@@ -85,9 +79,10 @@ export default function App() {
 
   const changeData = (arr: any, type: 'data' | 'color' | 'labels') => {
     setData({
+      labels: labels,
       datasets: [
         {
-          label: [''],
+          label: 'valor',
           data: type === 'data' ? arr : values,
           backgroundColor: type === 'color' ? arr : colors,
         },
