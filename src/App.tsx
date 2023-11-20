@@ -144,8 +144,8 @@ export default function App() {
           Preencha o Círculo da Vida com notas de 1 a 10, de acordo com sua satisfação pessoal em cada área.</p>
       </div>
 
-      <div className='flex flex-col lg:flex-row gap-2 items-center w-full h-full bg-white p-4 lg:px-12'>
-        <form className='w-full md:w-1/2 lg:w-1/3 flex flex-col gap-2'>
+      <div className='flex flex-col lg:flex-row gap-2 items-center w-full h-full bg-white p-12'>
+        <form className='w-full lg:w-1/3 flex flex-col gap-2'>
           <h4 className='text-xl font-bold'>Categorias</h4>
           <hr className='mb-4' />
 
@@ -180,7 +180,7 @@ export default function App() {
         </form>
 
         <div className='flex flex-col lg:flex-row gap-2 items-center w-full h-full' id="capture">
-          <div className='w-[70%] flex items-center justify-center aspect-square'>
+          <div className='w-full lg:w-[70%] flex items-center justify-center aspect-square'>
             <PolarArea 
               data={data} 
               className='p-6'
@@ -195,7 +195,7 @@ export default function App() {
             />
           </div>
 
-          <div className='w-[30%] h-full space-y-4'>
+          <div className='w-full lg:w-[30%] h-full space-y-4'>
             <div className='lg:py-4'></div>
             <Results data={data} labels={labels} />
           </div>
