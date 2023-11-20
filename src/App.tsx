@@ -2,12 +2,15 @@ import {
   Chart as ChartJS,
   RadialLinearScale,
   ArcElement,
+  Tooltip
 } from 'chart.js'
+import { PolarArea } from 'react-chartjs-2'
 import html2canvas from 'html2canvas'
 import { useEffect, useState } from 'react'
-import { PolarArea } from 'react-chartjs-2'
 
-ChartJS.register(RadialLinearScale, ArcElement)
+export const INSTA_ICON="https://raw.githubusercontent.com/gauravghongde/social-icons/9d939e1c5b7ea4a24ac39c3e4631970c0aa1b920/SVG/White/Instagram_white.svg"
+
+ChartJS.register(RadialLinearScale, ArcElement, Tooltip)
 
 /** 
  * @param data data[]
@@ -38,40 +41,41 @@ const Results = ({ data, labels }: any) => {
 }
 
 export default function App() {
-  const [values, setValues] = useState([10, 4, 8, 6, 7, 8, 3, 4, 5, 7, 7, 8])
+  const [values, setValues] = useState([0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0])
   const [colors, setColors] = useState([
-    '#dc2626',
-    '#f97316',
-    '#f59e0b',
-    '#facc15',
     '#84cc16',
-    '#22c55e',
-    '#14b8a6',
-    '#0ea5e9',
-    '#1d4ed8',
-    '#4338ca',
+    '#a3e635',
+    '#bef264',
+    '#7c3aed',
     '#8b5cf6',
-    '#d946ef',
+    '#a78bfa',
+    '#0ea5e9',
+    '#38bdf8',
+    '#7dd3fc',
+    '#f97316',
+    '#fb923c',
+    '#fdba74',
   ])
   const [labels, setLabels] = useState([
-    'Espiritualidade',
+    'Intelectual',
     'Saúde',
-    'Desenvolvimento intelectual',
-    'Equilíbrio emocional',
-    'Propósito',
-    'Finanças',
-    'Familia',
-    'Amor / Relacionamento',
+    'Emocional',
+    'Profissional',
+    'Financeiro',
     'Social',
-    'Lazer',
-    'Plenitude',
-    'Contribuição com o mundo'
+    'Conjugal',
+    'Filhos',
+    'Parentes',
+    'Próximo',
+    'Tempo',
+    'Espiritualidade',
   ])
 
   const [data, setData] = useState({
+    labels: labels,
     datasets: [
       {
-        label: '',
+        label: 'valor',
         data: values,
         backgroundColor: colors,
       },
@@ -83,7 +87,7 @@ export default function App() {
     setData({
       datasets: [
         {
-          label: '',
+          label: [''],
           data: type === 'data' ? arr : values,
           backgroundColor: type === 'color' ? arr : colors,
         },
@@ -132,8 +136,8 @@ export default function App() {
 
   return (
     <main className='flex flex-col min-h-screen p-6 xl:p-24 bg-slate-800 space-y-10'>
-      <a href="https://www.instagram.com/valeriagramss/" className='flex items-center justify-center gap-2 p-2 w-full text-zinc-300'>
-        <img src="https://raw.githubusercontent.com/gauravghongde/social-icons/9d939e1c5b7ea4a24ac39c3e4631970c0aa1b920/SVG/White/Instagram_white.svg" className='w-8 h-8' alt="" />
+      <a href="https://www.instagram.com/valeriagramss/" target='_blank' className='flex items-center justify-center gap-2 p-2 w-full text-zinc-300'>
+        <img src={INSTA_ICON} className='w-8 h-8' alt="" />
         <p>@valeriagramss</p>
       </a>
 
@@ -182,14 +186,18 @@ export default function App() {
 
         <div className='flex flex-col lg:flex-row gap-8 items-center w-full h-full' id="capture">
           <div className='w-full lg:w-2/3 flex items-center justify-center aspect-square'>
-            <PolarArea data={data} className='md:p-12' options={{
-              scales: {
-                r: {
-                  min: 0,
-                  max: 10
+            <PolarArea 
+              data={data} 
+              className='md:p-12'
+              options={{ 
+                scales: {
+                  r: { 
+                    min: 0,
+                    max: 10,
+                  }
                 }
-              }
-            }} />
+              }} 
+            />
           </div>
 
           <div className='w-full lg:w-[20rem] h-full space-y-4'>
