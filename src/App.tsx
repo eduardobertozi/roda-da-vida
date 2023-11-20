@@ -4,14 +4,41 @@ import {
   ArcElement,
 } from 'chart.js'
 import html2canvas from 'html2canvas'
-import { useState } from 'react'
-
+import { useEffect, useState } from 'react'
 import { PolarArea } from 'react-chartjs-2'
 
 ChartJS.register(RadialLinearScale, ArcElement)
 
+/** 
+ * @param data data[]
+ * @param labels label[]
+*/
+const Results = ({ data, labels }: any) => {
+  const [items, setItems] = useState(labels)
+
+  useEffect(() => {
+    setItems(labels)
+  }, [labels])
+
+  return (
+    <>
+      {data.datasets[0].backgroundColor.map((color: string, i: number) => (
+        <div key={color} className='flex items-center gap-2'>
+          <div
+            className='relative w-8 h-8 text-center text-white font-bold'
+            style={{ backgroundColor: color }}
+          >
+            {data.datasets[0].data[i]}
+          </div>
+          <span className='text-sm'>{items[i]}</span>
+        </div>
+      ))}
+    </>
+  )
+}
+
 export default function App() {
-  const [values, setValues] = useState([10, 10, 10, 10, 7, 8, 10, 10, 10, 10, 7, 8])
+  const [values, setValues] = useState([10, 4, 8, 6, 7, 8, 3, 4, 5, 7, 7, 8])
   const [colors, setColors] = useState([
     '#dc2626',
     '#f97316',
@@ -26,7 +53,7 @@ export default function App() {
     '#8b5cf6',
     '#d946ef',
   ])
-  const labels = [
+  const [labels, setLabels] = useState([
     'Espiritualidade',
     'Saúde',
     'Desenvolvimento intelectual',
@@ -39,7 +66,7 @@ export default function App() {
     'Lazer',
     'Plenitude',
     'Contribuição com o mundo'
-  ]
+  ])
 
   const [data, setData] = useState({
     datasets: [
@@ -49,10 +76,10 @@ export default function App() {
         backgroundColor: colors,
       },
     ],
-    borderWidth: 0,
+    borderWidth: 1,
   })
 
-  const changeData = (arr: any[], type: 'data' | 'color') => {
+  const changeData = (arr: any, type: 'data' | 'color' | 'labels') => {
     setData({
       datasets: [
         {
@@ -65,24 +92,32 @@ export default function App() {
     })
   }
 
-  const changeValues = (e: any, pos: number) => {
+  const changeValues = (e: React.ChangeEvent<HTMLInputElement>, pos: number) => {
     if (+e.target.value < 0 || +e.target.value > 10) return
-    
-    const arr = values
+
+    const arr = [...values]
     arr[pos] = +e.target.value
     setValues(arr)
-    
+
     changeData(arr, 'data')
   }
 
-  const changeColors = (e: any, pos: number) => {
+  const changeColors = (e: React.ChangeEvent<HTMLInputElement>, pos: number) => {
     if (e.target.value.length !== 7) return
 
-    const arr = colors
+    const arr = [...colors]
     arr[pos] = e.target.value
     setColors(arr)
-    
+
     changeData(arr, 'color')
+  }
+
+  const changeLabels = (e: React.ChangeEvent<HTMLInputElement>, pos: number) => {
+    const arr = [...labels]
+
+    arr[pos] = e.target.value
+
+    setLabels(arr)
   }
 
   const downloadImage = () => {
@@ -102,13 +137,14 @@ export default function App() {
         <p>@valeriagramss</p>
       </a>
 
-      <h1 className='text-4xl py-6 font-bold text-orange-400'>Roda da Vida Online</h1>
+      <h1 className='text-4xl py-6 font-bold text-orange-400'>Círculo da Vida Online</h1>
 
       <div className='space-y-6'>
         <h2 className='text-2xl font-bold text-white'>O que é a roda da vida?</h2>
-        <p className='text-lg text-zinc-300'>A roda da vida é uma ferramenta visual que auxilia no processo de análise e reflexão sobre a vida, para cada área da vida você deve se questionar qual o seu nível de satisfação, com o objetivo de visualizar as áreas da sua vida que precisam de atenção. O exercício consiste em mapear as áreas da sua vida em um círculo, por isso o nome roda da vida.</p>
+        <p className='text-lg text-zinc-300'>Um mínimo movimento pode resultar em uma vida totalmente diferente no futuro. Veja a amplitude de seus movimnentos - escolhas decisões. <br />
+          Preencha o Círculo da Vida com notas de 1 a 10, de acordo com sua satisfação pessoal em cada área.</p>
       </div>
-            
+
       <div className='flex flex-col lg:flex-row gap-8 items-center w-full h-full bg-white p-4 lg:px-12'>
         <form className='w-full md:w-1/2 lg:w-1/3 flex flex-col gap-2'>
           <h4 className='text-xl font-bold'>Categorias</h4>
@@ -121,6 +157,7 @@ export default function App() {
                   className='flex-1 h-10 p-2 rounded focus:outline-none text-zinc-700 border border-zinc-300'
                   name={item}
                   defaultValue={item}
+                  onChange={e => changeLabels(e, i)}
                 />
 
                 <input
@@ -142,32 +179,29 @@ export default function App() {
             </div>
           ))}
         </form>
-        
+
         <div className='flex flex-col lg:flex-row gap-8 items-center w-full h-full' id="capture">
           <div className='w-full lg:w-2/3 flex items-center justify-center aspect-square'>
-            <PolarArea data={data} className='md:p-12' />
+            <PolarArea data={data} className='md:p-12' options={{
+              scales: {
+                r: {
+                  min: 0,
+                  max: 10
+                }
+              }
+            }} />
           </div>
 
           <div className='w-full lg:w-[20rem] h-full space-y-4'>
             <div className='lg:py-4'></div>
-            {data.datasets[0].backgroundColor.map((color, i) => (
-              <div key={color} className='flex items-center gap-2'>
-                <div 
-                  className={`relative w-8 h-8 text-center text-white font-bold`} 
-                  style={{ backgroundColor: color }}
-                >
-                  <p className='w-8 h-8 p-1'>{data.datasets[0].data[i]}</p>
-                </div>
-                <span className='text-sm'>{labels[i]}</span>
-              </div>
-            ))}
+            <Results data={data} labels={labels} />
           </div>
         </div>
       </div>
 
       <div className='w-full text-center'>
-        <button 
-          onClick={downloadImage} 
+        <button
+          onClick={downloadImage}
           className='w-[20rem] p-4 bg-orange-500 text-white font-bold rounded'
         >
           Imprimir
@@ -183,7 +217,6 @@ export default function App() {
           Você pode salvar a roda da vida e, de tempos em tempos, refazer esse exercício e comparar os resultados
         </p>
       </div>
-
 
       <a href="https://www.instagram.com/valeriagramss/" className='flex items-center justify-center gap-2 p-2 w-full bg-slate-500 hover:bg-orange-500 rounded transition-all'>
         <span>Siga no Instagram</span>
